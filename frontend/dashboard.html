@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Aria AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-layout fade-in">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span>✨</span> Aria
+            </div>
+            
+            <nav id="navMenu">
+                <div class="nav-item active" data-target="dashboard">📊 Overview</div>
+                <div class="nav-item" data-target="recorder">🎙️ Voice Recorder</div>
+                <div class="nav-item" data-target="chat">🧠 AI Chat</div>
+                <div class="nav-item" data-target="recordings">📁 Recordings</div>
+                <div class="nav-item" data-target="notes">📝 Smart Notes</div>
+                <div class="nav-item" data-target="reminders">⏰ Reminders</div>
+                <div class="nav-item" data-target="resume">📄 ATS Helper</div>
+            </nav>
+            
+            <div style="margin-top: auto;">
+                <div class="nav-item text-muted" id="userProfileName">👤 User</div>
+                <div class="nav-item text-danger" id="logoutBtn" style="color: var(--danger);">🚪 Logout</div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Dashboard Overview -->
+            <section id="dashboard" class="content-section">
+                <h2 class="mb-4">Welcome back, <span id="welcomeName" class="gradient-text">User</span>!</h2>
+                
+                <div class="stats-grid">
+                    <div class="glass-panel stat-card">
+                        <div class="text-muted">Total Recordings</div>
+                        <div class="stat-value" id="statTotalRecs">0</div>
+                    </div>
+                    <div class="glass-panel stat-card">
+                        <div class="text-muted">Favorites</div>
+                        <div class="stat-value" id="statFavorites" style="color: var(--accent);">0</div>
+                    </div>
+                    <div class="glass-panel stat-card">
+                        <div class="text-muted">Recent Mood</div>
+                        <div class="stat-value" id="statMood" style="color: var(--primary-light);">Neutral</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel">
+                    <h3 class="mb-3">Recent Activity</h3>
+                    <div id="recentActivityList">
+                        <p class="text-muted">No recent activity found.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Voice Recorder -->
+            <section id="recorder" class="content-section d-none">
+                <h2 class="mb-2">Voice Studio</h2>
+                <p class="text-muted mb-4">Record high-quality audio with live mood detection.</p>
+                
+                <div class="glass-panel text-center">
+                    <div class="record-btn-wrapper" id="recordWrapper">
+                        <button class="mic-btn" id="recordBtn">🎙️</button>
+                        <p class="mt-3 text-muted" id="recordStatus">Ready to record</p>
+                        <p class="mt-1" id="recordTimer" style="font-family: monospace; font-size: 1.5rem;">00:00</p>
+                    </div>
+                    
+                    <canvas id="visualizer" class="visualizer-canvas"></canvas>
+                    
+                    <div id="playbackArea" class="mt-4 d-none">
+                        <audio id="audioPlayback" controls class="mb-3" style="width: 100%;"></audio>
+                        <div class="input-group">
+                            <input type="text" id="recordingTitle" class="form-control" placeholder="Enter title for this recording">
+                        </div>
+                        <div style="display: flex; gap: 1rem; justify-content: center;">
+                            <button class="btn btn-outline" id="discardBtn">Discard</button>
+                            <button class="btn btn-primary" id="saveRecordingBtn">Save & Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Chat -->
+            <section id="chat" class="content-section d-none">
+                <h2 class="mb-4">AI Companion</h2>
+                <div class="glass-panel chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot">
+                            Hello! I'm Aria. How can I help you be more productive today?
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" class="form-control" placeholder="Ask Aria anything..." style="flex: 1;">
+                        <button class="btn btn-primary" id="sendChatBtn">Send</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recordings List -->
+            <section id="recordings" class="content-section d-none">
+                <h2 class="mb-4">Your Recordings</h2>
+                <div class="glass-panel">
+                    <div id="recordingsList">
+                        <p class="text-muted">Loading recordings...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notes -->
+            <section id="notes" class="content-section d-none">
+                <h2 class="mb-4">Smart Notes</h2>
+                <div class="glass-panel">
+                    <div class="input-group">
+                        <textarea id="noteInput" class="form-control" rows="3" placeholder="Jot down a quick note..."></textarea>
+                    </div>
+                    <button class="btn btn-primary mb-4" id="saveNoteBtn">Save Note</button>
+                    
+                    <div id="notesList" style="display: grid; gap: 1rem;">
+                        <!-- Notes populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reminders -->
+            <section id="reminders" class="content-section d-none">
+                <h2 class="mb-4">Reminders & Tasks</h2>
+                <div class="glass-panel">
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <input type="text" id="reminderText" class="form-control" placeholder="What do you need to do?">
+                        <input type="datetime-local" id="reminderDate" class="form-control" style="width: auto;">
+                        <button class="btn btn-primary" id="addReminderBtn">Add</button>
+                    </div>
+                    <div id="remindersList" style="display: grid; gap: 1rem; margin-top: 2rem;">
+                        <!-- Reminders populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ATS Helper -->
+            <section id="resume" class="content-section d-none">
+                <h2 class="mb-2">Resume ATS Helper</h2>
+                <p class="text-muted mb-4">Paste your resume text below to analyze keywords and ATS score.</p>
+                <div class="glass-panel">
+                    <div class="input-group">
+                        <textarea id="resumeInput" class="form-control" rows="8" placeholder="Paste your resume content here..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="jobRoleInput" class="form-control" placeholder="Target Job Title (e.g. Software Engineer)">
+                    </div>
+                    <button class="btn btn-primary mb-4" id="analyzeResumeBtn">Analyze Resume</button>
+                    
+                    <div id="resumeResults" class="d-none" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
+                        <h3 class="mb-3">Analysis Results</h3>
+                        <div class="stats-grid mb-3">
+                            <div class="stat-card" style="background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                <div class="text-muted">ATS Match Score</div>
+                                <div class="stat-value" id="atsScore" style="color: var(--success);">0%</div>
+                            </div>
+                        </div>
+                        <div id="atsFeedback"></div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
